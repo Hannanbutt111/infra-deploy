@@ -15,7 +15,7 @@ variable "admin_username" {
 }
 
 variable "image_sku" {
-  default = "18.04-LTS"
+  default = "20_04-lts"
 }
 
 
