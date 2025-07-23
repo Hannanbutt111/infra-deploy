@@ -33,15 +33,18 @@ resource "azurerm_subnet" "main" {
 
 resource "azurerm_network_interface" "main" {
   name                = "${var.resource_group_name}-nic"
-  location            = var.location
+  location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
+depends_on = [azurerm_subnet.main]  # ✅ force wait for subnet
+
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.main.id
+    subnet_id                     = azurerm_subnet.main.id  # ✅ this ensures dependency
     private_ip_address_allocation = "Dynamic"
   }
 }
+
 
 resource "azurerm_linux_virtual_machine" "main" {
   name                = "${var.resource_group_name}-vm"
