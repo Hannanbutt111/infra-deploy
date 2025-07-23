@@ -62,7 +62,7 @@ resource "azurerm_linux_virtual_machine" "main" {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "22_04-lts"
-    version   = "latest"
+    version   = "22.04.202406180"
   }
 
   admin_ssh_key {
