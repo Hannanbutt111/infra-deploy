@@ -58,11 +58,11 @@ resource "azurerm_linux_virtual_machine" "main" {
     storage_account_type = "Standard_LRS"
   }
 
-  source_image_reference {
+ source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "22_04-lts"
-    version   = "22.04.202406180"
+    sku       = "18.04-LTS"
+    version   = "latest"
   }
 
   admin_ssh_key {
