@@ -59,11 +59,11 @@ resource "azurerm_linux_virtual_machine" "main" {
   }
 
  source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
-    version   = "latest"
-  }
+  publisher = "Canonical"
+  offer     = "UbuntuServer"
+  sku       = var.image_sku
+  version   = "latest"
+}
 
   admin_ssh_key {
     username   = var.admin_username
