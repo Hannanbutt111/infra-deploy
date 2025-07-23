@@ -1,11 +1,11 @@
 terraform {
-  required_version = ">= 1.0"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "~> 3.0"
     }
   }
+  required_version = ">= 1.0.0"
 }
 
 provider "azurerm" {
@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "main" {
 resource "azurerm_virtual_network" "main" {
   name                = "${var.resource_group_name}-vnet"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.main.location
+  location            = var.location
   resource_group_name = azurerm_resource_group.main.name
 }
 
@@ -33,7 +33,7 @@ resource "azurerm_subnet" "main" {
 
 resource "azurerm_network_interface" "main" {
   name                = "${var.resource_group_name}-nic"
-  location            = azurerm_resource_group.main.location
+  location            = var.location
   resource_group_name = azurerm_resource_group.main.name
 
   ip_configuration {
@@ -46,18 +46,12 @@ resource "azurerm_network_interface" "main" {
 resource "azurerm_linux_virtual_machine" "main" {
   name                = "${var.resource_group_name}-vm"
   resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
+  location            = var.location
   size                = var.vm_size
   admin_username      = var.admin_username
-
   network_interface_ids = [
     azurerm_network_interface.main.id,
   ]
-
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = file(var.ssh_public_key_path)
-  }
 
   os_disk {
     caching              = "ReadWrite"
@@ -67,7 +61,12 @@ resource "azurerm_linux_virtual_machine" "main" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "22_04-lts-gen2"
+    sku       = "18.04-LTS"
     version   = "latest"
+  }
+
+  admin_ssh_key {
+    username   = var.admin_username
+    public_key = file(var.ssh_public_key_path)
   }
 }
